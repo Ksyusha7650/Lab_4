@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include "Main.h"
 #include "Interface.h"
+
 using namespace std;
 
 class string_convert {
@@ -23,9 +24,9 @@ public:
 		text = new string[text_size];
 	}
 
-	string_convert() {
+	~string_convert() {
 		delete[] text;
 	}
 };
 void check_string(string_convert& text, int text_size, string_convert& res_text, int& res_text_size);
-void output_text(string_convert& text, int text_size);
+void output_text(string_convert& text, int text_size, string& name, int mode);
