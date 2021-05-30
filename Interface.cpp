@@ -1,16 +1,14 @@
 #include "Interface.h"
 
-
 double get_double() {
 	double input = 0;
 	cin >> input;
 	while (cin.fail()) {
-		while ((getchar() != '\n'));
 		cin.clear();
+		cin.ignore(INT_MAX, '\n');
 		cout << "Введите число." << endl;
 		cin >> input;
 	}
-	while (getchar() != '\n');
 	return input;
 }
 
@@ -18,12 +16,11 @@ int get_int() {
 	int input = 0;
 	cin >> input;
 	while (cin.fail()) {
-		while (getchar() != '\n');
 		cin.clear();
+		cin.ignore(INT_MAX, '\n');
 		cout << "Введите число." << endl;
 		cin >> input;
 	}
-	while (getchar() != '\n');
 	return input;
 }
 
@@ -56,55 +53,77 @@ void output_file(string_convert& text, int& text_size, string& name) {
 
 	text.set_size(text_size);
 	ifstream read_text(name);
-	const int move_code_to_ASCII = 75;
-	const int empty_symbol_first = 1;
-	const int empty_symbol_second = 2;
+	const int DASH_1 = -30;
+	const int DASH_2 = -106;
+	const int FIRST_EMPTY_ELEMENT = 1;
+	const int SECOND_EMPTY_ELEMENT = 2;
+	const int DASH = 45;
 	int current_index = 0;
 	for (int index = 0; index < quality_lines; index++) {
 		getline(read_text, temporary_line);
-		if (temporary_line != "") {                                         // Мишань, ты тут можешь начать менять символы как и я таким образом: 
-			temporary_line[0] += move_code_to_ASCII;                        // for (int i = 0; i < temporary_line.length(); i++) {
-			temporary_line.erase(empty_symbol_first, empty_symbol_second);  //	   temporary_line[i] += какое-то число; 
-			text[current_index] = temporary_line;                           //                                        }
-			current_index++;                                                //                                                          Мишик <3
+		if (temporary_line != "") {
+			if (temporary_line[0] != DASH)
+				if (temporary_line[0] == DASH_1) {
+					temporary_line[0] = DASH;
+					temporary_line.erase(FIRST_EMPTY_ELEMENT, SECOND_EMPTY_ELEMENT);
+				}
+			if (temporary_line[0] == DASH_2)
+				temporary_line[0] = DASH;
+			text[current_index] = temporary_line;
+			current_index++;
 		}
 	}
 	output_file_text.close();
 	read_text.close();
 }
 
-void user_input(string_convert& text, int& text_size, string& name) {
+void user_input(string_convert& text, int& text_size) {
+	const int MIN_CHAR_CODE = 31;
+	const int MAX_CHAR_CODE = 126;
+	const int DASH_1 = -30;
+	const int DASH_2 = -106;
 	cout << "Введите текст." << endl
 		<< "Для завершения ввода начните строку со знака точка (.)" << endl;
 	string_convert text_temporary;
-	string line;
-	text_size = 1;
-	int new_text_size = 1;
-	getline(cin, line);
+	string line = "";
+	text_size = 0;
 	text.set_size(text_size);
-	text[text_size - 1] = line;
-	while (true) {
+	bool end = false;
+	bool repeat = false;
+	int new_text_size = 0;
+	while (!(end)) {
+		repeat = false;
 		getline(cin, line);
 		if (line[0] != '.') {
 			if (line != "") {
-				new_text_size = text_size;
-				new_text_size++;
-				text_temporary.set_size(new_text_size);
-				for (int index = 0; index < text_size; index++)
-				{
-					text_temporary[index] = text[index];
+				for (int index = 0; index < line.size(); index++) {
+					if (!((line[index] == DASH_2) || ((MIN_CHAR_CODE < line[index]) && (line[index] < MAX_CHAR_CODE)))) {
+						cout << "Текст не должен содержать символы по коду ASCII меньше 33 и больше 126." << endl;
+						repeat = true;
+						break;
+					}
 				}
-				text_temporary[new_text_size - 1] = line;
-				text_size = new_text_size;
-				text.set_size(text_size);
-				for (int index = 0; index < text_size; index++)
-				{
-					text[index] = text_temporary[index];
-				}
+				if (!(repeat)) {
+					new_text_size = text_size;
+					new_text_size++;
+					text_temporary.set_size(new_text_size);
+					for (int index = 0; index < text_size; index++)
+					{
+						text_temporary[index] = text[index];
+					}
+					text_temporary[new_text_size - 1] = line;
+					text_size = new_text_size;
+					text.set_size(text_size);
+					for (int index = 0; index < text_size; index++)
+					{
+						text[index] = text_temporary[index];
+					}
 
+				}
 			}
 		}
-		else break;
+
+		else end = true;
 	}
 	cout << "Ввoд завершен" << endl;
 }
@@ -124,7 +143,7 @@ void input_types(string_convert& text, string_convert& res_text, int& text_size,
 	while (true) {
 		mode = get_int();
 		if (mode == MANUAL) {
-			user_input(text, text_size, name);
+			user_input(text, text_size);
 			cout << "- - - - - - - - - - - -" << endl;
 			break;
 		}
@@ -158,36 +177,42 @@ bool test_or_try(void) {
 }
 
 void result_file_name(string& name) {
-path:cout << "Введите путь файла, в который запишутся данные." << endl << "Образец: C:\\\\Папка1(если необходимо)\\\\"
-	"Папка2(если необходимо)\\\\...\\\\Название файла.txt " << endl << "Либо введите просто название файла, тогда он будет в папке этого проекта" << endl;
-	 cin >> name;
-	 if (ifstream(name)) {
-		 cout << "Файл уже существует." << endl;
-		 cout << "Выберите пункт меню:" << endl;
-		 cout << "[0] - перезаписать существующий файл" << endl << "[1] - повторить ввод" << endl;
-		 while (true) {
-			 int rewrite = get_int();
-			 if (rewrite == 0) {
-				 cout << "Вы выбрали опцию перезаписать файл." << endl;
-				 break;
-			 }
-			 if (rewrite == 1) {
-				 cout << "Вы выбрали опцию повторить ввод." << endl;
-				 goto path;
-				 break;
-			 }
-			 else
-				 cout << "Введите 1, либо 2";
-		 }
-	 }
-	 ofstream result_file(name, ofstream::app);
-	 error_code ec;
-	 if (!is_regular_file(name, ec)) {
-		 cout << "Адрес содержит недопустимые значения. Повторите ввод." << endl;
-		 ec.clear();
-		 goto path;
-	 }
-	 result_file.close();
+	bool repeat = true;
+	do {
+		repeat = false;
+		cout << "Введите путь файла, в который запишутся данные." << endl << "Образец: C:\\\\Папка1(если необходимо)\\\\"
+			"Папка2(если необходимо)\\\\...\\\\Название файла.txt " << endl << "Либо введите просто название файла, тогда он будет в папке этого проекта" << endl;
+		cin >> name;
+		if (ifstream(name)) {
+			cout << "Файл уже существует." << endl;
+			cout << "Выберите пункт меню:" << endl;
+			cout << "[0] - перезаписать существующий файл" << endl << "[1] - повторить ввод" << endl;
+			while (true) {
+				int rewrite = get_int();
+				if (rewrite == REWRITE) {
+					cout << "Вы выбрали опцию перезаписать файл." << endl;
+					break;
+				}
+				if (rewrite == REPEAT) {
+					cout << "Вы выбрали опцию повторить ввод." << endl;
+					repeat = true;
+					break;
+				}
+				else
+					cout << "Введите 1, либо 2" << endl;
+			}
+		}
+		if (!(repeat)) {
+			ofstream result_file(name, ofstream::app);
+			error_code ec;
+			if (!is_regular_file(name, ec)) {
+				cout << "Адрес содержит недопустимые значения. Повторите ввод." << endl;
+				ec.clear();
+				repeat = true;
+			}
+			result_file.close();
+		}
+	} while (repeat);
 }
 
 
@@ -215,7 +240,7 @@ bool end_program() {
 			return false;
 			break;
 		default:
-			cout << "Введите либо 0, либо 1." << endl;
+			cout << "Введите либо 1, либо 2." << endl;
 		}
 	}
 }

@@ -11,33 +11,13 @@ using namespace filesystem;
 
 class string_convert;
 
-class output_file_points {
-private:
-	int* file_arr_point;
-	int file_arr_size;
-
-public:
-	int& operator[] (const int index) {
-		return file_arr_point[index];
-	}
-	int get_size() {
-		return file_arr_size;
-	}
-	void set_size(int size) {
-		file_arr_size = size;
-		file_arr_point = new int[file_arr_size];
-	}
-
-	~output_file_points() {
-		delete[] file_arr_point;
-	}
-};
-
 enum Actions {
 	END = 1, CONTINUE,
 	MANUAL = 1, FILE_INPUT,
 	YES = 1, NO,
-	TEST = 1, TRY
+	TEST = 1, TRY,
+	REWRITE=0, REPEAT,
+	SAME = 1, ANOTHER = 2
 };
 
 int get_int();

@@ -8,9 +8,9 @@ int main()
 	greetings();
 	bool end = false;
 	string_convert text, res_text;
-	int text_size = 0, mode = 0, res_size_text = 0;
 	string name = "";
 	do {
+		int text_size = 0, mode = 0, res_size_text = 0;
 		if (test_or_try()) run_tests();
 		else {
 			input_types(text, res_text, text_size, name, mode);
