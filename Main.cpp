@@ -16,7 +16,7 @@ int main()
 		input_types(text, text_size, name, mode);
 		check_string(text, text_size, res_text, res_size_text);
 		results(res_text, res_size_text);
-		output_text(res_text, res_size_text, mode);
+		output_text(res_text, res_size_text);
 	}
 		end = end_program();
 	} while (end != true);

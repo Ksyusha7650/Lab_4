@@ -24,7 +24,6 @@ int get_int();
 double get_double();
 void greetings();
 bool end_program();
-void result_file_name(string& name);
 bool test_or_try(void);
 void input_types(string_convert& text, int& text_size, string& name, int& mode);
 void results(string_convert& res_text, int& res_size_text);

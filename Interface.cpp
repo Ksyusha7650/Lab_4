@@ -176,44 +176,6 @@ bool test_or_try(void) {
 	return true;
 }
 
-void result_file_name(string& name) {
-	bool repeat = true;
-	do {
-		repeat = false;
-		cout << "Введите путь папки, в которую запишутся данные." << endl << "Либо введите просто название папки, тогда она будет в папке этого проекта" << endl;
-		cin >> name;
-	//if (ifstream(name)) {
-	//	cout << "Файл уже существует." << endl;
-	//	cout << "Выберите пункт меню:" << endl;
-	//	cout << "[0] - перезаписать существующий файл" << endl << "[1] - повторить ввод" << endl;
-	//	while (true) {
-	//		int rewrite = get_int();
-	//		if (rewrite == REWRITE) {
-	//			cout << "Вы выбрали опцию перезаписать файл." << endl;
-	//			break;
-	//		}
-	//		if (rewrite == REPEAT) {
-	//			cout << "Вы выбрали опцию повторить ввод." << endl;
-	//			repeat = true;
-	//			break;
-	//		}
-	//		else
-	//			cout << "Введите 1, либо 2" << endl;
-	//	}
-	//}
-	//if (!(repeat)) {
-	//	ofstream result_file(name, ofstream::app);
-	//	error_code ec;
-	//	if (!is_regular_file(name, ec)) {
-	//		cout << "Адрес содержит недопустимые значения. Повторите ввод." << endl;
-	//		ec.clear();
-	//		repeat = true;
-	//	}
-	//	result_file.close();
-	//}
-	} while (repeat);
-}
-
 
 void greetings() {
 	cout << "Программу выполнила Рухлова Ксения Алексеевна." << endl << "Группа: 404." << endl << "Вариант: 22." << endl <<
