@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
+#include <string.h>
 #include <iostream>
 #include <Windows.h>
 #include "Main.h"
 #include "Interface.h"
+#include <direct.h>
 
 using namespace std;
 
@@ -29,4 +31,4 @@ public:
 	}
 };
 void check_string(string_convert& text, int text_size, string_convert& res_text, int& res_text_size);
-void output_text(string_convert& text, int text_size, string& name, int mode);
+void output_text(string_convert& text, int text_size, int mode);

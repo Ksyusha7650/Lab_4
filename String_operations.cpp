@@ -20,7 +20,7 @@ void check_string(string_convert& text, int text_size, string_convert& res_text,
 	}
 }
 
-void output_text(string_convert& res_text, int res_text_size, string& name, int mode) {
+void output_text(string_convert& res_text, int res_text_size, int mode) {
 	cout << "Сохранить измененный текст?" << endl
 		<< "Выберите пункт меню:" << endl;
 	cout << "[1] - сохранить" << endl << "[2] - пропустить" << endl;
@@ -38,35 +38,84 @@ void output_text(string_convert& res_text, int res_text_size, string& name, int 
 		}
 		else cout << "Введите либо 1, либо 2." << endl;
 	}
-	if (save_text){
-	cout << "Куда сохранить измененный текст?" << endl;
-	if (mode == FILE_INPUT) {
-		cout << "Выберите пункт меню:" << endl;
-		cout << "[1] - в тот же файл" << endl << "[2] - в другой файл" << endl;
-		int choice = get_int();
-		while (true) {
-			if (choice == SAME) break;
-			if (choice == ANOTHER) {
-				result_file_name(name);
-				break;
+	if (save_text) {
+		cout << "Куда сохранить измененный текст?" << endl;
+		string name_path;
+		char* name;
+		int size_of_name;
+		bool repeat = true;
+		do {
+			size_of_name = 0;
+			repeat = false;
+			cin >> name_path;
+			size_of_name = name_path.size() + 1;
+			name = new char[size_of_name];
+			for (int index = 0; index < size_of_name; index++) {
+				name[index] = static_cast <unsigned char> (name_path[index]);
 			}
-			else cout << "Введите либо 1, либо 2" << endl;
+			name[size_of_name] = '\0';
+			struct stat buff;
+			if (!(stat(name, &buff))) {
+				cout << "Такая папка уже существует, введите другое имя." << endl;
+				repeat = true;
+			}
+		} while (repeat);
+		_mkdir(name);
+		for (int index = 0; index < res_text_size; index++) {
+			char* number_char;
+			string number = to_string(index+1);
+			const int END = 9;
+			int size_number = number.size();
+			int size_of_name_file = size_of_name + END + size_number;
+			char* name_file = new char[size_of_name_file];
+			for (int index_sym = 0; index_sym < size_of_name; index_sym++) {
+				name_file[index_sym] = name[index_sym];
+			}
+			int index_name = size_of_name;
+			name_file[index_name] = '/';
+			index_name++;
+			name_file[index_name] = '/';
+			index_name++;
+			for (int index_sym = 0; index_sym < size_number; index_sym++) {
+				name_file[index_sym + index_name] = static_cast <unsigned char> (number[index_sym]);
+			}
+			index_name++;
+			name_file[index_name] = '.';
+			index_name++;
+			name_file[index_name] = 't';
+			index_name++;
+			name_file[index_name] = 'x';
+			index_name++;
+			name_file[index_name] = 't';
+			index_name++;
+			name_file[index_name] = '\0';
+			cout << name_file << endl;
+			ofstream result_file(name_file);
+			result_file.clear();
+			const int FIRST_EMPTY_ELEMENT = 0;
+			const int SECOND_EMPTY_ELEMENT = 2;
+			for (int index_t = 0; index_t < res_text_size; index_t++) {
+				string line = res_text[index_t];
+				if (line[0] == '-') {
+					line.erase(0, SECOND_EMPTY_ELEMENT);
+					line.insert(0, "– ");
+				}
+				result_file << line << endl;
+			}
+			//ofstream result_file(name1);
+			//result_file.clear();
+			//const int FIRST_EMPTY_ELEMENT = 0;
+			//const int SECOND_EMPTY_ELEMENT = 2;
+			//for (int index = 0; index < res_text_size; index++) {
+			//	string line = res_text[index];
+			//	if (line[0] == '-') {
+			//		line.erase(0, SECOND_EMPTY_ELEMENT);
+			//		line.insert(0, "– ");
+			//	}
+			//	result_file << line << endl;
+			//}
+			//cout << "Данные сохранены." << endl;
+			//cout << "- - - - - - - - - -" << endl;
 		}
 	}
-	else result_file_name(name);
-	ofstream result_file(name);
-	result_file.clear();
-	const int FIRST_EMPTY_ELEMENT = 0;
-	const int SECOND_EMPTY_ELEMENT = 2;
-	for (int index = 0; index < res_text_size; index++) {
-		string line = res_text[index];
-		if (line[0] == '-') {
-			line.erase(0, SECOND_EMPTY_ELEMENT);
-			line.insert(0, "– ");
-		}
-		result_file << line << endl;
-	}
-	cout << "Данные сохранены." << endl;
-	cout << "- - - - - - - - - -" << endl;
-}
 }

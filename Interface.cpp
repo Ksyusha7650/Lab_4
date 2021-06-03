@@ -136,7 +136,7 @@ void results(string_convert& res_text, int& res_size_text) {
 	cout << "- - - - - - - - - -" << endl;
 }
 
-void input_types(string_convert& text, string_convert& res_text, int& text_size, string& name, int& mode) {
+void input_types(string_convert& text, int& text_size, string& name, int& mode) {
 	cout << "Выберите способ ввода текста." << endl
 		<< "Выберите пункт меню: " << endl << "[1] - для ввода вручную" << endl
 		<< "[2] - для ввода текста из файла" << endl;
@@ -180,38 +180,37 @@ void result_file_name(string& name) {
 	bool repeat = true;
 	do {
 		repeat = false;
-		cout << "Введите путь файла, в который запишутся данные." << endl << "Образец: C:\\\\Папка1(если необходимо)\\\\"
-			"Папка2(если необходимо)\\\\...\\\\Название файла.txt " << endl << "Либо введите просто название файла, тогда он будет в папке этого проекта" << endl;
+		cout << "Введите путь папки, в которую запишутся данные." << endl << "Либо введите просто название папки, тогда она будет в папке этого проекта" << endl;
 		cin >> name;
-		if (ifstream(name)) {
-			cout << "Файл уже существует." << endl;
-			cout << "Выберите пункт меню:" << endl;
-			cout << "[0] - перезаписать существующий файл" << endl << "[1] - повторить ввод" << endl;
-			while (true) {
-				int rewrite = get_int();
-				if (rewrite == REWRITE) {
-					cout << "Вы выбрали опцию перезаписать файл." << endl;
-					break;
-				}
-				if (rewrite == REPEAT) {
-					cout << "Вы выбрали опцию повторить ввод." << endl;
-					repeat = true;
-					break;
-				}
-				else
-					cout << "Введите 1, либо 2" << endl;
-			}
-		}
-		if (!(repeat)) {
-			ofstream result_file(name, ofstream::app);
-			error_code ec;
-			if (!is_regular_file(name, ec)) {
-				cout << "Адрес содержит недопустимые значения. Повторите ввод." << endl;
-				ec.clear();
-				repeat = true;
-			}
-			result_file.close();
-		}
+	//if (ifstream(name)) {
+	//	cout << "Файл уже существует." << endl;
+	//	cout << "Выберите пункт меню:" << endl;
+	//	cout << "[0] - перезаписать существующий файл" << endl << "[1] - повторить ввод" << endl;
+	//	while (true) {
+	//		int rewrite = get_int();
+	//		if (rewrite == REWRITE) {
+	//			cout << "Вы выбрали опцию перезаписать файл." << endl;
+	//			break;
+	//		}
+	//		if (rewrite == REPEAT) {
+	//			cout << "Вы выбрали опцию повторить ввод." << endl;
+	//			repeat = true;
+	//			break;
+	//		}
+	//		else
+	//			cout << "Введите 1, либо 2" << endl;
+	//	}
+	//}
+	//if (!(repeat)) {
+	//	ofstream result_file(name, ofstream::app);
+	//	error_code ec;
+	//	if (!is_regular_file(name, ec)) {
+	//		cout << "Адрес содержит недопустимые значения. Повторите ввод." << endl;
+	//		ec.clear();
+	//		repeat = true;
+	//	}
+	//	result_file.close();
+	//}
 	} while (repeat);
 }
 
